@@ -3,17 +3,18 @@
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { toRows, useGallery } from "@/shared/hooks/useGallery";
 import { useLang } from "@/shared/i18n/LanguageProvider";
-import type { Media } from "@/shared/lib/media";
+import type { ImageMedia, VideoMedia } from "@/shared/lib/media";
 import { GalleryEmpty } from "@/shared/ui/GalleryEmpty";
 import { GalleryTile } from "@/shared/ui/GalleryTile";
 import { Lightbox } from "@/shared/ui/Lightbox";
 import { Reveal } from "@/shared/ui/Reveal";
+import { VideoBlock } from "@/shared/ui/VideoBlock";
 import { MHeading, MSection } from "../ui";
 
 const INITIAL = 4;
 
 /** Two photos per row, both at their own proportions; four shown first. */
-export function MobileGallery({ items }: { items: Media[] }) {
+export function MobileGallery({ items, videos }: { items: ImageMedia[]; videos: VideoMedia[] }) {
   const { t } = useLang();
   const g = useGallery(items, INITIAL);
   const rows = toRows(g.visible, 2, 1.6);
@@ -52,6 +53,7 @@ export function MobileGallery({ items }: { items: Media[] }) {
             {g.expanded ? <ChevronUp className="h-4.5 w-4.5" aria-hidden="true" /> : <ChevronDown className="h-4.5 w-4.5" aria-hidden="true" />}
           </button>
         )}
+        <VideoBlock videos={videos} compact />
       </div>
       <Lightbox items={items} index={g.open} onClose={g.close} onStep={g.step} />
     </MSection>

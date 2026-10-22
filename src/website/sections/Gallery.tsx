@@ -3,12 +3,13 @@
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { toRows, useGallery } from "@/shared/hooks/useGallery";
 import { useLang } from "@/shared/i18n/LanguageProvider";
-import type { Media } from "@/shared/lib/media";
+import type { ImageMedia, VideoMedia } from "@/shared/lib/media";
 import { GalleryEmpty } from "@/shared/ui/GalleryEmpty";
 import { GalleryTile } from "@/shared/ui/GalleryTile";
 import { Lightbox } from "@/shared/ui/Lightbox";
 import { Reveal } from "@/shared/ui/Reveal";
 import { Waves } from "@/shared/ui/Shapes";
+import { VideoBlock } from "@/shared/ui/VideoBlock";
 import { Container, Heading, Section } from "../ui";
 
 const INITIAL = 6;
@@ -18,7 +19,7 @@ const PER_ROW = 3;
  * Heading and the «show more» button live in a narrow left column, so the photo rows get the
  * whole height of a laptop screen. Justified rows: each photo keeps its own proportions.
  */
-export function Gallery({ items }: { items: Media[] }) {
+export function Gallery({ items, videos }: { items: ImageMedia[]; videos: VideoMedia[] }) {
   const { t } = useLang();
   const g = useGallery(items, INITIAL);
   const rows = toRows(g.visible, PER_ROW, 3.8);
@@ -31,6 +32,7 @@ export function Gallery({ items }: { items: Media[] }) {
           <Reveal className="mt-8 short:mt-6">
             <GalleryEmpty />
           </Reveal>
+          <VideoBlock videos={videos} />
         </Container>
       </Section>
     );
@@ -57,18 +59,21 @@ export function Gallery({ items }: { items: Media[] }) {
           </div>
         </div>
 
-        <div className="col-span-9 flex flex-col gap-3 2xl:gap-4">
-          {rows.map((row, r) => (
-            <Reveal key={r} delay={r < 2 ? r * 0.06 : 0} className="flex gap-3 2xl:gap-4">
-              {row.spacer > 0 && <span style={{ flex: `${row.spacer / 2} 1 0` }} aria-hidden="true" />}
-              {row.cells.map(({ item, index, ratio }) => (
-                <div key={item.src} className="min-w-0 overflow-hidden rounded-[1.25rem]" style={{ flex: `${ratio} 1 0`, aspectRatio: ratio }}>
-                  <GalleryTile item={item} index={index} sizes="(min-width: 1536px) 480px, 30vw" onOpen={g.show} />
-                </div>
-              ))}
-              {row.spacer > 0 && <span style={{ flex: `${row.spacer / 2} 1 0` }} aria-hidden="true" />}
-            </Reveal>
-          ))}
+        <div className="col-span-9">
+          <div className="flex flex-col gap-3 2xl:gap-4">
+            {rows.map((row, r) => (
+              <Reveal key={r} delay={r < 2 ? r * 0.06 : 0} className="flex gap-3 2xl:gap-4">
+                {row.spacer > 0 && <span style={{ flex: `${row.spacer / 2} 1 0` }} aria-hidden="true" />}
+                {row.cells.map(({ item, index, ratio }) => (
+                  <div key={item.src} className="min-w-0 overflow-hidden rounded-[1.25rem]" style={{ flex: `${ratio} 1 0`, aspectRatio: ratio }}>
+                    <GalleryTile item={item} index={index} sizes="(min-width: 1536px) 480px, 30vw" onOpen={g.show} />
+                  </div>
+                ))}
+                {row.spacer > 0 && <span style={{ flex: `${row.spacer / 2} 1 0` }} aria-hidden="true" />}
+              </Reveal>
+            ))}
+          </div>
+          <VideoBlock videos={videos} />
         </div>
       </Container>
       <Lightbox items={items} index={g.open} onClose={g.close} onStep={g.step} />

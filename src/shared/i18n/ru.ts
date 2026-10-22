@@ -38,6 +38,7 @@ export const ru: Dictionary = {
     placeholder: "Фотография скоро появится",
     hoursLabel: "Ждём вас каждый день",
     hoursNote: "Время работы",
+    videoAlt: "Видео из детского сада Timosh Mirza",
   },
 
   about: {
@@ -95,6 +96,9 @@ export const ru: Dictionary = {
     photoAlt: (n: number) => `Детский сад Timosh Mirza — фото ${n}`,
     open: (n: number) => `Открыть фото ${n}`,
     videoLabel: (n: number) => `Видео ${n}`,
+    videos: "Видео",
+    play: (n: number) => `Воспроизвести видео ${n}`,
+    soundHint: "Нажмите, чтобы смотреть со звуком",
   },
 
   documents: {

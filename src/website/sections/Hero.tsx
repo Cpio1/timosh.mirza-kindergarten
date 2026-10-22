@@ -4,8 +4,8 @@ import { m } from "framer-motion";
 import { ArrowDown, Clock3, MapPin, MessageCircle } from "lucide-react";
 import { kindergarten } from "@/shared/data/kindergarten";
 import { useLang } from "@/shared/i18n/LanguageProvider";
-import type { Media } from "@/shared/lib/media";
-import { HERO_SIZES } from "@/shared/lib/media-sizes";
+import type { Media, VideoMedia } from "@/shared/lib/media";
+import { HERO_SIZES, isLandscape } from "@/shared/lib/media-sizes";
 import { scrollToSection } from "@/shared/lib/scroll";
 import { MediaView } from "@/shared/ui/MediaView";
 import { Blob, Ring, Sparkle, Sun, Waves } from "@/shared/ui/Shapes";
@@ -18,7 +18,7 @@ const rise = (delay: number) => ({
   transition: { duration: 0.7, delay, ease },
 });
 
-export function Hero({ media }: { media: Media | null }) {
+export function Hero({ media, video }: { media: Media | null; video: VideoMedia | null }) {
   const { t } = useLang();
   const h = t.hero;
   const go = (id: string) => (e: React.MouseEvent) => {
@@ -98,15 +98,24 @@ export function Hero({ media }: { media: Media | null }) {
           transition={{ duration: 0.9, delay: 0.1, ease }}
           className="relative col-span-6 justify-self-end"
         >
-          <div className="relative aspect-[0.94] h-[min(66svh,32rem)] short:h-[min(68svh,28rem)] 2xl:h-[min(66svh,38rem)]">
+          <div className={`relative max-w-full h-[min(66svh,32rem)] ${isLandscape(media) ? "aspect-[1.1]" : "aspect-[0.94]"} short:h-[min(68svh,28rem)] 2xl:h-[min(66svh,38rem)]`}>
             <Sun className="absolute -top-[9%] -left-[11%] w-[38%] animate-spin-slow" />
             <Ring className="absolute -top-[5%] -left-[5%] h-[110%] w-[110%]" />
             <div className="blob-a absolute inset-0 overflow-hidden bg-turquoise-soft shadow-soft ring-8 ring-cream">
               <MediaView media={media} alt={h.photoAlt} sizes={HERO_SIZES} priority placeholder={h.placeholder} />
             </div>
             <Waves className="absolute -right-[6%] bottom-[16%] w-[24%] animate-drift" />
-            <Sparkle className="absolute top-[6%] right-[4%] w-[6%]" />
-            <Sparkle className="absolute top-[18%] right-[-2%] w-[3.5%]" color="var(--color-turquoise)" />
+            {video ? (
+              // main-page2 is a video: a small muted, looping "window" next to the main photo
+              <div className="absolute -top-[3%] -right-[7%] aspect-square w-[32%] overflow-hidden rounded-full bg-turquoise-soft shadow-soft ring-[6px] ring-cream">
+                <MediaView media={video} alt={h.videoAlt} sizes="200px" />
+              </div>
+            ) : (
+              <>
+                <Sparkle className="absolute top-[6%] right-[4%] w-[6%]" />
+                <Sparkle className="absolute top-[18%] right-[-2%] w-[3.5%]" color="var(--color-turquoise)" />
+              </>
+            )}
 
             <m.div
               initial={{ opacity: 0, y: 16 }}

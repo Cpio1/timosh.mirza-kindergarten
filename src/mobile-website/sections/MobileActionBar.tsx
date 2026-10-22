@@ -21,7 +21,7 @@ export function MobileActionBar() {
         <a
           href={links.tel}
           tabIndex={shown ? 0 : -1}
-          className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-turquoise-deep text-[0.95rem] font-semibold text-white active:scale-[0.98]"
+          className="flex h-12 flex-1 items-center justify-center gap-1.5 rounded-full bg-turquoise-deep text-[0.88rem] font-semibold whitespace-nowrap text-white min-[375px]:gap-2 min-[375px]:text-[0.95rem] active:scale-[0.98]"
         >
           <Phone className="h-4.5 w-4.5" aria-hidden="true" />
           {t.header.call}
@@ -31,7 +31,7 @@ export function MobileActionBar() {
           target="_blank"
           rel="noopener noreferrer"
           tabIndex={shown ? 0 : -1}
-          className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-ink text-[0.95rem] font-semibold text-white active:scale-[0.98]"
+          className="flex h-12 flex-1 items-center justify-center gap-1.5 rounded-full bg-ink text-[0.88rem] font-semibold whitespace-nowrap text-white min-[375px]:gap-2 min-[375px]:text-[0.95rem] active:scale-[0.98]"
         >
           <WhatsAppIcon className="h-5 w-5" />
           WhatsApp

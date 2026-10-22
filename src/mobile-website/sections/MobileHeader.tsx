@@ -93,7 +93,7 @@ export function MobileHeader() {
                 ))}
               </ul>
               <div className="mt-5 grid grid-cols-2 gap-2.5">
-                <a href={links.tel} className="flex h-13 items-center justify-center gap-2 rounded-full bg-turquoise-deep text-[0.95rem] font-semibold text-white shadow-turquoise">
+                <a href={links.tel} className="flex h-13 items-center justify-center gap-1.5 rounded-full bg-turquoise-deep text-[0.88rem] font-semibold whitespace-nowrap text-white min-[375px]:gap-2 min-[375px]:text-[0.95rem] shadow-turquoise">
                   <Phone className="h-4.5 w-4.5" aria-hidden="true" />
                   {t.header.call}
                 </a>
@@ -101,7 +101,7 @@ export function MobileHeader() {
                   href={links.whatsapp(t.contacts.whatsappText)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-13 items-center justify-center gap-2 rounded-full bg-ink text-[0.95rem] font-semibold text-white"
+                  className="flex h-13 items-center justify-center gap-1.5 rounded-full bg-ink text-[0.88rem] font-semibold whitespace-nowrap text-white min-[375px]:gap-2 min-[375px]:text-[0.95rem]"
                 >
                   <WhatsAppIcon className="h-5 w-5" />
                   WhatsApp

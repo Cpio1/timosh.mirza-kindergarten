@@ -17,11 +17,11 @@ export function Website({ media }: { media: SiteMedia }) {
     <>
       <Header />
       <main id="main">
-        <Hero media={media.hero} />
+        <Hero media={media.hero} video={media.heroVideo} />
         <About media={media.about} />
         <Groups />
         <Meals />
-        <Gallery items={media.gallery} />
+        <Gallery items={media.gallery} videos={media.videos} />
         <Documents />
         <Contacts />
       </main>

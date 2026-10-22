@@ -4,7 +4,7 @@ import { m } from "framer-motion";
 import { ArrowDown, Clock3, MapPin, MessageCircle } from "lucide-react";
 import { kindergarten } from "@/shared/data/kindergarten";
 import { useLang } from "@/shared/i18n/LanguageProvider";
-import type { Media } from "@/shared/lib/media";
+import type { Media, VideoMedia } from "@/shared/lib/media";
 import { HERO_SIZES } from "@/shared/lib/media-sizes";
 import { scrollToSection } from "@/shared/lib/scroll";
 import { MediaView } from "@/shared/ui/MediaView";
@@ -18,7 +18,7 @@ const rise = (delay: number) => ({
 });
 
 /** Phone hero: title first, then a wide blob photo with the key numbers pinned to its edge. */
-export function MobileHero({ media }: { media: Media | null }) {
+export function MobileHero({ media, video }: { media: Media | null; video: VideoMedia | null }) {
   const { t } = useLang();
   const h = t.hero;
   const go = (id: string) => (e: React.MouseEvent) => {
@@ -72,7 +72,13 @@ export function MobileHero({ media }: { media: Media | null }) {
         className="relative mt-9"
       >
         <Sun className="absolute -top-8 -right-3 z-10 w-20" />
-        <Sparkle className="absolute top-6 -left-1 z-10 w-4" color="var(--color-turquoise)" />
+        {video ? (
+          <div className="absolute -top-6 -left-1 z-10 aspect-square w-24 overflow-hidden rounded-full bg-turquoise-soft shadow-soft ring-4 ring-cream min-[390px]:w-28">
+            <MediaView media={video} alt={h.videoAlt} sizes="120px" />
+          </div>
+        ) : (
+          <Sparkle className="absolute top-6 -left-1 z-10 w-4" color="var(--color-turquoise)" />
+        )}
         <div className="blob-b relative aspect-[4/3.3] overflow-hidden bg-turquoise-soft shadow-soft ring-[6px] ring-cream">
           <MediaView media={media} alt={h.photoAlt} sizes={HERO_SIZES} priority placeholder={h.placeholder} />
         </div>

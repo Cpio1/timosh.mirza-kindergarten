@@ -27,10 +27,11 @@ export function useGallery(items: Media[], initial: number) {
   };
 }
 
-/** Width ÷ height of a gallery item (videos without a poster get a portrait default). */
+/** Width ÷ height of a gallery item (a video with neither poster nor readable size gets a portrait default). */
 export function mediaRatio(item: Media) {
   if (item.kind === "image") return item.width / item.height;
-  return item.poster ? item.poster.width / item.poster.height : 4 / 5;
+  if (item.poster) return item.poster.width / item.poster.height;
+  return item.size ? item.size.width / item.size.height : 4 / 5;
 }
 
 export type GalleryRow = { cells: { item: Media; index: number; ratio: number }[]; spacer: number };

@@ -6,8 +6,10 @@ import path from "node:path";
 /**
  * Photos and videos are picked up from /public at build time:
  *  - main-page.*   — Hero photo (image or video)
- *  - main-page2.*  — second photo or video, shown in the «Біз туралы» section
- *  - everything else in public/images — gallery, sorted by file name
+ *  - main-page2.*  — a photo is shown in the «Біз туралы» section; a video becomes the small
+ *                    muted background video on the hero (the about section then takes the first gallery photo)
+ *  - other photos in public/images — gallery, sorted by file name
+ *  - other videos in public/images or public/videos — the gallery's video block
  * Named files may sit in /public or in /public/images.
  * A video may have a poster next to it: `<name>-poster.jpg`.
  * Byte-identical copies (e.g. the same photo saved twice under two names) are shown once.
@@ -15,18 +17,31 @@ import path from "node:path";
  */
 
 export type ImageMedia = { kind: "image"; src: string; width: number; height: number };
-export type VideoMedia = { kind: "video"; src: string; type: string; poster: ImageMedia | null };
+export type VideoMedia = {
+  kind: "video";
+  src: string;
+  type: string;
+  poster: ImageMedia | null;
+  /** display size read from the MP4/MOV header (rotation applied); null if unreadable */
+  size: { width: number; height: number } | null;
+};
 export type Media = ImageMedia | VideoMedia;
 
 export type SiteMedia = {
   hero: Media | null;
-  /** main-page2 — photo or video */
+  /** main-page2 when it is a video: muted, looping accent on the hero */
+  heroVideo: VideoMedia | null;
+  /** main-page2 when it is a photo (otherwise the first gallery photo) */
   about: Media | null;
-  gallery: Media[];
+  /** photos only */
+  gallery: ImageMedia[];
+  /** played on demand, with sound, from the video block */
+  videos: VideoMedia[];
 };
 
 const PUBLIC_DIR = path.join(process.cwd(), "public");
 const IMAGES_DIR = path.join(PUBLIC_DIR, "images");
+const VIDEOS_DIR = path.join(PUBLIC_DIR, "videos");
 const IMAGE_EXT = /\.(jpe?g|png|webp|avif|gif)$/i;
 const VIDEO_TYPES: Record<string, string> = { ".mp4": "video/mp4", ".webm": "video/webm", ".mov": "video/mp4", ".m4v": "video/mp4" };
 const SKIP = /^(logo|favicon|icon|og|opengraph)/i;
@@ -95,6 +110,41 @@ function readExifOrientation(buf: Buffer, tiff: number) {
   return 1;
 }
 
+/**
+ * Display size of an MP4/MOV video from its track header ("tkhd"). The header may sit at the
+ * start or at the end of the file, so both ends are searched. Phone videos are often stored
+ * landscape with a 90° rotation matrix — then width and height are swapped.
+ */
+function readVideoSize(file: string): { width: number; height: number } | null {
+  const fd = fs.openSync(file, "r");
+  try {
+    const { size } = fs.fstatSync(fd);
+    const chunk = Math.min(size, 4 * 1024 * 1024);
+    const head = Buffer.alloc(chunk);
+    fs.readSync(fd, head, 0, chunk, 0);
+    const tail = Buffer.alloc(chunk);
+    fs.readSync(fd, tail, 0, chunk, size - chunk);
+    for (const buf of [head, tail]) {
+      for (let p = buf.indexOf("tkhd"); p > 0; p = buf.indexOf("tkhd", p + 4)) {
+        let q = p + 4;
+        if (q + 84 > buf.length) break;
+        const v1 = buf[q] === 1;
+        q += 4 + (v1 ? 32 : 20) + 16; // version/flags, times + track id + duration, reserved/layer/group/volume
+        const a = buf.readInt32BE(q);
+        const b = buf.readInt32BE(q + 4);
+        const width = buf.readUInt32BE(q + 36) >>> 16;
+        const height = buf.readUInt32BE(q + 40) >>> 16;
+        if (width > 0 && height > 0) return a === 0 && Math.abs(b) === 0x10000 ? { width: height, height: width } : { width, height };
+      }
+    }
+  } catch {
+    /* unreadable header — the layout falls back to a default proportion */
+  } finally {
+    fs.closeSync(fd);
+  }
+  return null;
+}
+
 function list(dir: string) {
   try {
     return fs
@@ -145,7 +195,7 @@ function loadFolder(dir: string, prefix: string) {
       const poster = posterFile ? loadImage(dir, prefix, posterFile) : null;
       items.push({
         name: stem(file),
-        media: { kind: "video", src: url(prefix, file), type: VIDEO_TYPES[ext], poster },
+        media: { kind: "video", src: url(prefix, file), type: VIDEO_TYPES[ext], poster, size: readVideoSize(path.join(dir, file)) },
         hash: fingerprint(path.join(dir, file)),
       });
     }
@@ -155,20 +205,25 @@ function loadFolder(dir: string, prefix: string) {
 
 export function getSiteMedia(): SiteMedia {
   const inImages = loadFolder(IMAGES_DIR, "/images");
+  const inVideos = loadFolder(VIDEOS_DIR, "/videos");
   // Named files may also sit directly in /public.
   const named = [...inImages, ...loadFolder(PUBLIC_DIR, "")];
   const find = (name: string) => named.find((m) => m.name === name) ?? null;
 
   const hero = find("main-page");
-  const about = find("main-page2");
-  // A photo already used on the page, or seen earlier in the folder, is not repeated.
-  const seen = new Set([hero?.hash, about?.hash].filter(Boolean));
-  const gallery: Media[] = [];
-  for (const item of inImages) {
-    if (item === hero || item === about || SKIP.test(item.name) || seen.has(item.hash)) continue;
+  const second = find("main-page2");
+  // A file already used on the page, or seen earlier in the folders, is not repeated.
+  const seen = new Set([hero?.hash, second?.hash].filter(Boolean));
+  const gallery: ImageMedia[] = [];
+  const videos: VideoMedia[] = [];
+  for (const item of [...inImages, ...inVideos]) {
+    if (item === hero || item === second || SKIP.test(item.name) || seen.has(item.hash)) continue;
     seen.add(item.hash);
-    gallery.push(item.media);
+    if (item.media.kind === "image") gallery.push(item.media);
+    else videos.push(item.media);
   }
 
-  return { hero: hero?.media ?? null, about: about?.media ?? null, gallery };
+  const heroVideo = second?.media.kind === "video" ? second.media : null;
+  const about = second && !heroVideo ? second.media : (gallery.shift() ?? null);
+  return { hero: hero?.media ?? null, heroVideo, about, gallery, videos };
 }

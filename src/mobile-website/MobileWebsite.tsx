@@ -18,11 +18,11 @@ export function MobileWebsite({ media }: { media: SiteMedia }) {
     <>
       <MobileHeader />
       <main id="main">
-        <MobileHero media={media.hero} />
+        <MobileHero media={media.hero} video={media.heroVideo} />
         <MobileAbout media={media.about} />
         <MobileGroups />
         <MobileMeals />
-        <MobileGallery items={media.gallery} />
+        <MobileGallery items={media.gallery} videos={media.videos} />
         <MobileDocuments />
         <MobileContacts />
       </main>

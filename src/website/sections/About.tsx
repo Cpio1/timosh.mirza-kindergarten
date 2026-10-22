@@ -2,7 +2,7 @@
 
 import { useLang } from "@/shared/i18n/LanguageProvider";
 import type { Media } from "@/shared/lib/media";
-import { ABOUT_SIZES } from "@/shared/lib/media-sizes";
+import { ABOUT_SIZES, isLandscape } from "@/shared/lib/media-sizes";
 import { factIcons, factTints } from "@/shared/ui/factIcons";
 import { MediaView } from "@/shared/ui/MediaView";
 import { Reveal } from "@/shared/ui/Reveal";
@@ -18,14 +18,14 @@ export function About({ media }: { media: Media | null }) {
       <WaveEdge fill="var(--color-milk)" className="absolute inset-x-0 top-0 h-10 w-full" />
       <Container className="relative grid grid-cols-12 items-center gap-10 pt-6 xl:gap-14">
         <Reveal className="col-span-5">
-          <div className="relative mx-auto aspect-[0.8] h-[min(64svh,30rem)] short:h-[min(66svh,26rem)] 2xl:h-[min(64svh,34rem)]">
+          <div className={`relative mx-auto max-w-full h-[min(64svh,30rem)] short:h-[min(66svh,26rem)] 2xl:h-[min(64svh,34rem)] ${isLandscape(media) ? "aspect-[1.02]" : "aspect-[0.8]"}`}>
             <Hill fill="var(--color-turquoise)" className="absolute -bottom-[2%] -left-[10%] w-[62%] opacity-90" />
             <div className="absolute -top-[4%] -right-[8%] h-[34%] w-[34%] rounded-full bg-sun" aria-hidden="true" />
             <div className="arch absolute inset-0 overflow-hidden bg-turquoise-soft shadow-soft ring-8 ring-cream">
               <MediaView media={media} alt={a.photoAlt} sizes={ABOUT_SIZES} placeholder={t.hero.placeholder} />
             </div>
             <Sparkle className="absolute top-[30%] -left-[7%] w-[7%]" color="var(--color-turquoise)" />
-            <Pebbles className="absolute -right-[16%] bottom-[10%] w-[30%]" />
+            <Pebbles className="absolute -right-[12%] -bottom-[7%] w-[30%]" />
           </div>
         </Reveal>
 

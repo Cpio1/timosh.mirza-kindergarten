@@ -45,9 +45,10 @@ export function MediaView({ media, alt, sizes, priority = false, placeholder, cl
 }
 
 /**
- * Muted, inline, looping video. The <video> element exists only after hydration — so the
- * server HTML of the hidden layout never downloads or plays a second copy — and it plays
- * only while on screen.
+ * Background video: always muted, inline and looping, with the poster as the static cover.
+ * The <video> element exists only after hydration — so the server HTML of the hidden layout
+ * never downloads a second copy — and it plays only while on screen. With reduced motion or
+ * data saver on, it stays on the poster.
  */
 function AutoVideo({ media, label, sizes, className }: { media: Extract<Media, { kind: "video" }>; label: string; sizes: string; className: string }) {
   const mounted = useMounted();
@@ -57,9 +58,12 @@ function AutoVideo({ media, label, sizes, className }: { media: Extract<Media, {
     const video = ref.current;
     if (!video) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
+    const still = reduce || saveData;
+    if (still) video.pause();
     const io = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !reduce) video.play().catch(() => {});
+        if (entry.isIntersecting && !still) video.play().catch(() => {});
         else video.pause();
       },
       { threshold: 0.25 },
@@ -79,7 +83,9 @@ function AutoVideo({ media, label, sizes, className }: { media: Extract<Media, {
           muted
           loop
           playsInline
+          autoPlay
           preload="metadata"
+          disablePictureInPicture
           aria-label={label}
         >
           <source src={media.src} type={media.type} />

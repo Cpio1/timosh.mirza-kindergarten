@@ -37,6 +37,7 @@ export const kk = {
     placeholder: "Фотосурет жақында қосылады",
     hoursLabel: "Күн сайын бізді күтеді",
     hoursNote: "Жұмыс уақыты",
+    videoAlt: "Timosh Mirza балабақшасынан бейнежазба",
   },
 
   about: {
@@ -94,6 +95,9 @@ export const kk = {
     photoAlt: (n: number) => `Timosh Mirza балабақшасы — ${n}-фото`,
     open: (n: number) => `${n}-фотоны үлкейтіп қарау`,
     videoLabel: (n: number) => `${n}-бейнежазба`,
+    videos: "Бейнежазбалар",
+    play: (n: number) => `${n}-бейнежазбаны ойнату`,
+    soundHint: "Дыбыспен көру үшін басыңыз",
   },
 
   documents: {
