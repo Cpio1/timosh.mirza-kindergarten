@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+/* Laptop screens with little height (1366×768, 1440×900 with browser chrome): tighter vertical rhythm. */
+@custom-variant short (@media (min-width: 64rem) and (max-height: 820px));
+
+@theme {
+  --color-milk: #f9f6ea;
+  --color-milk-deep: #f1ebd3;
+  --color-cream: #fffdf6;
+  --color-turquoise: #2caca5;
+  --color-turquoise-deep: #1b7c77;
+  --color-turquoise-dark: #155f5b;
+  --color-turquoise-soft: #d5efec;
+  --color-sun: #f4c95d;
+  --color-sun-deep: #d9a630;
+  --color-sun-soft: #fbecc4;
+  --color-ink: #263b3b;
+  --color-ink-soft: #536866;
+  --color-line: #e6dfc8;
+
+  --font-display: var(--font-nunito), ui-rounded, system-ui, sans-serif;
+  --font-sans: var(--font-golos), system-ui, sans-serif;
+
+  --shadow-soft: 0 18px 40px -22px rgb(38 59 59 / 0.28);
+  --shadow-card: 0 10px 30px -18px rgb(38 59 59 / 0.3), 0 2px 6px -2px rgb(38 59 59 / 0.06);
+  --shadow-turquoise: 0 12px 26px -12px rgb(27 124 119 / 0.65);
+  --shadow-sun: 0 12px 26px -12px rgb(217 166 48 / 0.7);
+
+  --animate-drift: drift 14s ease-in-out infinite;
+  --animate-spin-slow: spin-slow 80s linear infinite;
+
+  @keyframes spin-slow {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes drift {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+    50% {
+      transform: translate3d(0, -10px, 0) rotate(3deg);
+    }
+  }
+}
+
+@layer base {
+  html {
+    /* fixed header height + a little air, so anchored sections are never hidden under it */
+    scroll-padding-top: 5.25rem;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+  @media (min-width: 64rem) {
+    html {
+      scroll-padding-top: 5.5rem;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+  body {
+    background: var(--color-milk);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  ::selection {
+    background: var(--color-sun-soft);
+  }
+  :focus-visible {
+    outline: 2.5px solid var(--color-turquoise-deep);
+    outline-offset: 3px;
+    border-radius: 8px;
+  }
+}
+
+/* Server HTML holds both compositions; until hydration the media query shows the right one. */
+.website-root {
+  display: none;
+}
+@media (min-width: 64rem) {
+  .website-root {
+    display: block;
+  }
+  .mobile-root {
+    display: none;
+  }
+}
+
+@utility glass {
+  background: rgb(255 253 246 / 0.82);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+}
+
+/* Organic masks for photos — each section has its own silhouette. */
+@utility blob-a {
+  border-radius: 58% 42% 46% 54% / 52% 44% 56% 48%;
+}
+@utility blob-b {
+  border-radius: 44% 56% 62% 38% / 48% 58% 42% 52%;
+}
+@utility arch {
+  border-radius: 999px 999px 2.25rem 2.25rem;
+}
+
+/* Thin dotted texture used as a quiet background accent. */
+@utility dots {
+  background-image: radial-gradient(currentColor 1.4px, transparent 1.6px);
+  background-size: 16px 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
