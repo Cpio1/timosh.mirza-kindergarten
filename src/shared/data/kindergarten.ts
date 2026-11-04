@@ -18,11 +18,11 @@ export const kindergarten = {
   },
   /**
    * «Құжаттар / Документы»: the documents live in a shared Google Drive folder, the site only
-   * links to it. Paste the folder's share link here (Drive → Share → "Anyone with the link").
-   * While it is empty, the button shows "the link will appear soon" instead of a dead link.
+   * links to it. The folder must stay shared as "Anyone with the link".
+   * If this is emptied, the button shows "the link will appear soon" instead of a dead link.
    */
   documents: {
-    driveUrl: "",
+    driveUrl: "https://drive.google.com/drive/folders/1QJZE2d3E8YD0foKw9SxEITvC54XyNkSp",
   },
   /**
    * 2GIS organisation card «Тимош Мырза, частный детский сад» in Кольди, Карасайский район.
