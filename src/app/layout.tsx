@@ -58,7 +58,7 @@ const jsonLd = {
   sameAs: [kindergarten.instagram.url],
   address: {
     "@type": "PostalAddress",
-    streetAddress: "Алмалы көшесі, 13",
+    streetAddress: "Алмалы көшесі, 23",
     addressLocality: "Көлді ауылы",
     addressRegion: "Алматы облысы, Қарасай ауданы",
     addressCountry: "KZ",

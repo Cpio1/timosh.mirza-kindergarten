@@ -6,7 +6,7 @@ import { links } from "@/shared/data/kindergarten";
 import { useLang } from "@/shared/i18n/LanguageProvider";
 
 /**
- * 2GIS map with the marker on the kindergarten's address in 2GIS (see `twoGis` in the data file).
+ * 2GIS map with the marker on the kindergarten's own 2GIS card (see `twoGis` in the data file).
  * It's 2GIS's static map, loaded lazily; the whole card opens the place in 2GIS, where the
  * route button lives. A static image never traps page scroll on phones.
  */
