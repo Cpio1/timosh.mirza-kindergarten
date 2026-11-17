@@ -8,7 +8,7 @@ export const contentType = "image/png";
 export default async function OpengraphImage() {
   const title = "Timosh Mirza";
   const subtitle = "Қазақ тілінде тәрбие беретін балабақша";
-  const facts = ["1,5–6 жас", "12 топ", "300 бала", "07:00–17:00"];
+  const facts = ["3–6 жас", "2 топ", "50 бала", "07:30–17:00"];
   const place = "Алматы облысы · Қарасай ауданы · Көлді ауылы";
 
   const [display, body] = await Promise.all([

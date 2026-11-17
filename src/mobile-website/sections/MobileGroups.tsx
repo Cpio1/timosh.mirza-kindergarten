@@ -8,7 +8,7 @@ import { Reveal } from "@/shared/ui/Reveal";
 import { Sparkle, WaveEdge } from "@/shared/ui/Shapes";
 import { MHeading, MSection } from "../ui";
 
-/** Turquoise band: the 12-bead dial centred, facts as small tiles, one call action. */
+/** Turquoise band: the groups dial centred, facts as small tiles, one call action. */
 export function MobileGroups() {
   const { t } = useLang();
   const g = t.groups;

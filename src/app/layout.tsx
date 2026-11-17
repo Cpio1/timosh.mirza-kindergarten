@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Golos_Text, Nunito } from "next/font/google";
-import { kindergarten } from "@/shared/data/kindergarten";
+import { kindergarten, links } from "@/shared/data/kindergarten";
 import { seo } from "@/shared/data/seo";
 import { LanguageProvider } from "@/shared/i18n/LanguageProvider";
 import { SITE_URL } from "@/shared/lib/site-url";
@@ -58,12 +58,13 @@ const jsonLd = {
   sameAs: [kindergarten.instagram.url],
   address: {
     "@type": "PostalAddress",
-    streetAddress: "Алмалы көшесі, 15",
+    streetAddress: "Алмалы көшесі, 13",
     addressLocality: "Көлді ауылы",
     addressRegion: "Алматы облысы, Қарасай ауданы",
     addressCountry: "KZ",
   },
   geo: { "@type": "GeoCoordinates", latitude: kindergarten.twoGis.lat, longitude: kindergarten.twoGis.lng },
+  hasMap: links.twoGisCard,
   openingHoursSpecification: {
     "@type": "OpeningHoursSpecification",
     opens: kindergarten.hours.opens,

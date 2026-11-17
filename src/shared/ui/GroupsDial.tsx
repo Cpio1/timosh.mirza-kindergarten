@@ -4,7 +4,7 @@ import { m } from "framer-motion";
 import { kindergarten } from "@/shared/data/kindergarten";
 
 /**
- * Twelve groups drawn as twelve beads around a dial, with the count in the middle.
+ * One bead per group (`groupsCount`) around a dial, with the count in the middle.
  * It shows "how many", nothing more — group names and ages are not published.
  * Size it with `className` (square); everything inside scales with it.
  */

@@ -6,11 +6,11 @@
 
 export const kindergarten = {
   brand: "Timosh Mirza",
-  ages: { from: 1.5, to: 6 },
-  groupsCount: 12,
-  pupilsCount: 300,
+  ages: { from: 3, to: 6 },
+  groupsCount: 2,
+  pupilsCount: 50,
   meals: 5,
-  hours: { opens: "07:00", closes: "17:00" },
+  hours: { opens: "07:30", closes: "17:00" },
   phone: { display: "+7 701 338 03 13", tel: "+77013380313", wa: "77013380313" },
   instagram: {
     handle: "@timosh.mirza",
@@ -25,16 +25,16 @@ export const kindergarten = {
     driveUrl: "https://drive.google.com/drive/folders/1QJZE2d3E8YD0foKw9SxEITvC54XyNkSp",
   },
   /**
-   * 2GIS organisation card «Тимош Мырза, частный детский сад» in Кольди, Карасайский район.
-   * The point is 2GIS's own position of that card (not hand-picked coordinates).
-   * NB: 2GIS lists the card at «улица Алмалы, 23», while the kindergarten gives «Алмалы, 15»
-   * (2GIS has no building 15 on that street). The site shows the kindergarten's address;
-   * the marker stays on the 2GIS card until the address is confirmed.
+   * Address: Алматинская область, Карасайский район, село Кольди, улица Алмалы, 13.
+   * 2GIS has this address as building «Кольди, улица Алмалы, 13» (id below); the point is
+   * 2GIS's own position of that building, not hand-picked coordinates.
+   * (The old 2GIS organisation card «Тимош Мырза», firm 70000001052169305, is listed at
+   * «Алмалы, 23», so the site no longer links to it.)
    */
   twoGis: {
-    firmId: "70000001052169305",
-    lat: 43.323987,
-    lng: 76.706422,
+    buildingId: "70030076280629009",
+    lat: 43.324803,
+    lng: 76.706994,
   },
 } as const;
 
@@ -43,8 +43,9 @@ const { twoGis, phone } = kindergarten;
 export const links = {
   tel: `tel:${phone.tel}`,
   whatsapp: (text: string) => `https://wa.me/${phone.wa}?text=${encodeURIComponent(text)}`,
-  twoGisCard: `https://2gis.kz/almaty/firm/${twoGis.firmId}`,
-  /** Keyless 2GIS static map with a marker on the kindergarten. */
+  /** The address in 2GIS: the building card has the «Маршрут / Route» button. */
+  twoGisCard: `https://2gis.kz/almaty/geo/${twoGis.buildingId}`,
+  /** Keyless 2GIS static map with a marker on the kindergarten's address. */
   twoGisStatic: (w: number, h: number, zoom = 16) =>
     `https://static.maps.2gis.com/1.0?zoom=${zoom}&size=${w},${h}&markers=${twoGis.lng},${twoGis.lat}`,
 } as const;

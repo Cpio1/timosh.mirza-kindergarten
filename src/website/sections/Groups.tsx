@@ -10,7 +10,7 @@ import { Container, Heading, Section } from "../ui";
 
 /**
  * Deep turquoise band. Group names and ages per group are not published, so instead of
- * twelve empty cards the section shows the general picture: a 12-bead dial and key facts.
+ * empty cards the section shows the general picture: a dial with one bead per group and key facts.
  */
 export function Groups() {
   const { t } = useLang();
